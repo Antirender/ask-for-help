@@ -1,0 +1,162 @@
+[
+  {
+    "id": "professor-email-polite",
+    "recipientType": "Professor",
+    "channel": "email",
+    "tone": "polite",
+    "lang": "en",
+    "label": "Email to Professor (Polite)",
+    "description": "A well-structured email asking a professor for clarification or feedback.",
+    "defaults": {
+      "recipientType": "Professor",
+      "channel": "email",
+      "tone": "polite",
+      "askType": "direction",
+      "timeboxMin": 5
+    }
+  },
+  {
+    "id": "ta-slack-direct",
+    "recipientType": "TA",
+    "channel": "slack",
+    "tone": "direct",
+    "lang": "en",
+    "label": "Slack DM to TA (Direct)",
+    "description": "A brief Slack message to a TA, getting straight to the point.",
+    "defaults": {
+      "recipientType": "TA",
+      "channel": "slack",
+      "tone": "direct",
+      "askType": "answer",
+      "timeboxMin": 2
+    }
+  },
+  {
+    "id": "teammate-slack-warm",
+    "recipientType": "Teammate",
+    "channel": "slack",
+    "tone": "warm",
+    "lang": "en",
+    "label": "Slack to Teammate (Warm)",
+    "description": "A friendly message to a teammate asking for help or a review.",
+    "defaults": {
+      "recipientType": "Teammate",
+      "channel": "slack",
+      "tone": "warm",
+      "askType": "review",
+      "timeboxMin": 10
+    }
+  },
+  {
+    "id": "mentor-email-polite",
+    "recipientType": "Mentor",
+    "channel": "email",
+    "tone": "polite",
+    "lang": "en",
+    "label": "Email to Mentor (Polite)",
+    "description": "A polite email asking a mentor for direction on a career or project decision.",
+    "defaults": {
+      "recipientType": "Mentor",
+      "channel": "email",
+      "tone": "polite",
+      "askType": "recommend",
+      "timeboxMin": 10
+    }
+  },
+  {
+    "id": "forum-issue-direct",
+    "recipientType": "Forum",
+    "channel": "issue",
+    "tone": "direct",
+    "lang": "en",
+    "label": "GitHub Issue / Forum Post",
+    "description": "A structured post for a public forum or GitHub issue.",
+    "defaults": {
+      "recipientType": "Forum",
+      "channel": "issue",
+      "tone": "direct",
+      "askType": "answer",
+      "timeboxMin": 15
+    }
+  },
+  {
+    "id": "support-email-urgent",
+    "recipientType": "Support",
+    "channel": "email",
+    "tone": "urgent",
+    "lang": "en",
+    "label": "Urgent Support Email",
+    "description": "An urgent but professional email to a support team or help desk.",
+    "defaults": {
+      "recipientType": "Support",
+      "channel": "email",
+      "tone": "urgent",
+      "askType": "answer",
+      "timeboxMin": 5
+    }
+  },
+  {
+    "id": "professor-inperson-polite",
+    "recipientType": "Professor",
+    "channel": "in_person",
+    "tone": "polite",
+    "lang": "en",
+    "label": "In-person Ask (Professor)",
+    "description": "A script for asking a professor during office hours.",
+    "defaults": {
+      "recipientType": "Professor",
+      "channel": "in_person",
+      "tone": "polite",
+      "askType": "direction",
+      "timeboxMin": 5
+    }
+  },
+  {
+    "id": "professor-email-polite-zh",
+    "recipientType": "Professor",
+    "channel": "email",
+    "tone": "polite",
+    "lang": "zh",
+    "label": "邮件给教授（礼貌）",
+    "description": "一封结构清晰的邮件，向教授请求指导或反馈。",
+    "defaults": {
+      "recipientType": "Professor",
+      "channel": "email",
+      "tone": "polite",
+      "askType": "direction",
+      "timeboxMin": 5
+    }
+  },
+  {
+    "id": "ta-slack-direct-zh",
+    "recipientType": "TA",
+    "channel": "slack",
+    "tone": "direct",
+    "lang": "zh",
+    "label": "Slack 给助教（直接）",
+    "description": "一条简洁的 Slack 消息，直入主题向助教提问。",
+    "defaults": {
+      "recipientType": "TA",
+      "channel": "slack",
+      "tone": "direct",
+      "askType": "answer",
+      "timeboxMin": 2
+    }
+  },
+  {
+    "id": "teammate-slack-warm-zh",
+    "recipientType": "Teammate",
+    "channel": "slack",
+    "tone": "warm",
+    "lang": "zh",
+    "label": "Slack 给队友（友好）",
+    "description": "一条友好的消息，请求队友帮忙或 review。",
+    "defaults": {
+      "recipientType": "Teammate",
+      "channel": "slack",
+      "tone": "warm",
+      "askType": "review",
+      "timeboxMin": 10
+    }
+  }
+]

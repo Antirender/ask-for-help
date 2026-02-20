@@ -1,0 +1,70 @@
+/* ============================================================
+   Themes — Light / Dark / High-contrast
+   ============================================================ */
+
+/* --- Light theme (default) --- */
+[data-theme="light"], :root {
+  --bg:            var(--clr-surface);
+  --bg-card:       var(--clr-surface-bright);
+  --bg-elevated:   var(--clr-surface-bright);
+  --text:          var(--clr-on-surface);
+  --text-muted:    var(--clr-on-surface-var);
+  --border:        var(--clr-outline);
+  --border-light:  var(--clr-outline-var);
+  --accent:        var(--clr-primary);
+  --accent-text:   var(--clr-on-primary);
+  --focus-ring:    rgba(59, 92, 204, 0.45);
+}
+
+/* --- Dark theme --- */
+[data-theme="dark"] {
+  --clr-surface:        #121218;
+  --clr-surface-dim:    #1a1a22;
+  --clr-surface-bright: #1e1e28;
+  --clr-on-surface:     #e4e4ea;
+  --clr-on-surface-var: #9a9aa4;
+  --clr-outline:        #44444e;
+  --clr-outline-var:    #2e2e38;
+  --clr-primary:        #a8b8ff;
+  --clr-primary-light:  #c8d4ff;
+  --clr-primary-dark:   #6b8aff;
+  --clr-on-primary:     #1a1a22;
+  --clr-error:          #ffb4ab;
+  --clr-error-container:#93000a;
+  --clr-success:        #81c784;
+  --clr-success-container:#1b5e20;
+
+  --bg:            var(--clr-surface);
+  --bg-card:       var(--clr-surface-bright);
+  --bg-elevated:   var(--clr-surface-bright);
+  --text:          var(--clr-on-surface);
+  --text-muted:    var(--clr-on-surface-var);
+  --border:        var(--clr-outline);
+  --border-light:  var(--clr-outline-var);
+  --accent:        var(--clr-primary);
+  --accent-text:   var(--clr-on-primary);
+  --focus-ring:    rgba(168, 184, 255, 0.45);
+}
+
+/* --- High contrast overlay --- */
+[data-high-contrast="true"] {
+  --clr-on-surface:     #000000;
+  --clr-on-surface-var: #333333;
+  --clr-outline:        #000000;
+  --text:               #000000;
+  --text-muted:         #333333;
+}
+[data-theme="dark"][data-high-contrast="true"] {
+  --clr-on-surface:     #ffffff;
+  --clr-on-surface-var: #cccccc;
+  --clr-outline:        #ffffff;
+  --text:               #ffffff;
+  --text-muted:         #cccccc;
+}
+
+/* Global focus-visible ring */
+*:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 2px;
+  border-radius: var(--radius-xs);
+}

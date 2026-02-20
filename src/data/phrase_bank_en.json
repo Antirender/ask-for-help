@@ -1,0 +1,133 @@
+{
+  "salutations": {
+    "polite": [
+      "Hi Professor {name},",
+      "Hello {name},",
+      "Good morning/afternoon {name},",
+      "Dear {name},",
+      "Hi there,"
+    ],
+    "direct": [
+      "Hi {name},",
+      "Hey {name},",
+      "Hi,"
+    ],
+    "warm": [
+      "Hey {name}!",
+      "Hi {name}, hope you're doing well!",
+      "Hey there {name},"
+    ],
+    "urgent": [
+      "Hi {name} — sorry for the urgent message.",
+      "Hi {name}, I need quick help with something time-sensitive.",
+      "{name}, apologies for the short notice —"
+    ]
+  },
+  "closings": {
+    "polite": [
+      "Thank you for your time.",
+      "I really appreciate your help.",
+      "Thanks so much — I know you're busy.",
+      "Thank you in advance for any guidance."
+    ],
+    "direct": [
+      "Thanks!",
+      "Appreciate it.",
+      "Let me know — thanks."
+    ],
+    "warm": [
+      "Thanks a lot, really appreciate it!",
+      "You're the best — thank you!",
+      "Thanks so much for your help!"
+    ],
+    "urgent": [
+      "Thank you — I'll watch for your reply.",
+      "Really appreciate the quick response.",
+      "Thanks for looking at this so quickly."
+    ]
+  },
+  "goal_starters": [
+    "I'm trying to {goal}",
+    "My goal is to {goal}",
+    "I need to {goal}",
+    "I want to figure out how to {goal}",
+    "I'm working toward {goal}"
+  ],
+  "context_phrases": [
+    "For context, {context}",
+    "Some background: {context}",
+    "Quick context: {context}",
+    "Here's the situation: {context}"
+  ],
+  "tried_phrases": [
+    "I've already tried: {tried}",
+    "So far I've attempted: {tried}",
+    "What I've done: {tried}",
+    "Steps I've taken: {tried}"
+  ],
+  "block_phrases": [
+    "I'm stuck at: {block}",
+    "The problem is: {block}",
+    "Where I'm blocked: {block}",
+    "I can't get past: {block}"
+  ],
+  "ask_phrases": {
+    "answer": [
+      "Could you help me understand {detail}?",
+      "Do you know the answer to {detail}?",
+      "Can you clarify {detail}?"
+    ],
+    "direction": [
+      "Could you point me in the right direction for {detail}?",
+      "What would you suggest as a next step for {detail}?",
+      "I'd appreciate any guidance on {detail}."
+    ],
+    "review": [
+      "Would you mind reviewing {detail}?",
+      "Could you take a quick look at {detail}?",
+      "I'd value your feedback on {detail}."
+    ],
+    "confirm": [
+      "Am I on the right track with {detail}?",
+      "Could you confirm whether {detail} is correct?",
+      "I just want to double-check: {detail}."
+    ],
+    "recommend": [
+      "Do you have a recommendation for {detail}?",
+      "What would you recommend for {detail}?",
+      "Any suggestions for {detail}?"
+    ]
+  },
+  "timebox_phrases": [
+    "This should only take about {min} minutes of your time.",
+    "I think a {min}-minute chat would cover it.",
+    "I estimate this would need {min} minutes at most.",
+    "Even {min} minutes would really help."
+  ],
+  "exit_options": [
+    "No worries if you're too busy — I can also try {alternative}.",
+    "If this isn't a good time, I totally understand.",
+    "Feel free to point me elsewhere if someone else is better suited.",
+    "If you don't have time, even a quick pointer would help."
+  ],
+  "subject_lines": {
+    "polite": [
+      "Quick question about {topic}",
+      "Request for guidance: {topic}",
+      "Help with {topic} — {course}"
+    ],
+    "direct": [
+      "{topic} — need input",
+      "Question: {topic}",
+      "Help needed: {topic}"
+    ],
+    "warm": [
+      "Hey! Quick question about {topic}",
+      "Could use your help with {topic} 😊"
+    ],
+    "urgent": [
+      "Urgent: {topic} — need help before {deadline}",
+      "Time-sensitive: {topic}"
+    ]
+  }
+}
