@@ -5,6 +5,7 @@
 import { useState } from 'react';
 import type { EvidenceLogEntry, Channel, Tone, RecipientType } from '../core/schema';
 import { scoreColor, scoreLabel } from '../core/scoring';
+import { IconFileText, IconTrash } from './Icons';
 
 interface Props {
   entries: EvidenceLogEntry[];
@@ -30,7 +31,6 @@ export default function HistoryTable({ entries, onDelete, onDeleteAll, onExportJ
   if (entries.length === 0) {
     return (
       <div className="card text-center" style={{ padding: '48px 24px' }}>
-        <div style={{ fontSize: '3rem', marginBottom: 16 }}>📋</div>
         <p className="text-muted">No history yet. Build your first ask to see it here!</p>
       </div>
     );
@@ -71,10 +71,14 @@ export default function HistoryTable({ entries, onDelete, onDeleteAll, onExportJ
         </div>
 
         <div style={{ marginLeft: 'auto' }} className="flex gap-2">
-          <button className="btn btn-outline btn-sm" onClick={onExportJSON}>📄 JSON</button>
-          <button className="btn btn-outline btn-sm" onClick={onExportCSV}>📊 CSV</button>
-          <button className="btn btn-ghost btn-sm" onClick={onDeleteAll} style={{ color: 'var(--clr-error)' }}>
-            🗑️ Clear All
+          <button className="btn btn-outline btn-sm" onClick={onExportJSON} style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+            {IconFileText({ size: 14 })} JSON
+          </button>
+          <button className="btn btn-outline btn-sm" onClick={onExportCSV} style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+            {IconFileText({ size: 14 })} CSV
+          </button>
+          <button className="btn btn-ghost btn-sm" onClick={onDeleteAll} style={{ color: 'var(--clr-error)', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+            {IconTrash({ size: 14 })} Clear All
           </button>
         </div>
       </div>
@@ -152,9 +156,9 @@ export default function HistoryTable({ entries, onDelete, onDeleteAll, onExportJ
                   <button
                     className="btn btn-ghost btn-sm"
                     onClick={() => onDelete(entry.id)}
-                    style={{ color: 'var(--clr-error)' }}
+                    style={{ color: 'var(--clr-error)', display: 'inline-flex', alignItems: 'center', gap: 4 }}
                   >
-                    🗑️ Delete
+                    {IconTrash({ size: 14 })} Delete
                   </button>
                 </div>
               </div>

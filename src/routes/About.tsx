@@ -8,7 +8,7 @@ export default function About() {
   return (
     <div className="container container-narrow page-enter">
       <h1 style={{ fontSize: 'var(--fs-xl)', fontWeight: 700, marginBottom: 'var(--sp-6)' }}>
-        ℹ️ About Ask for help
+        About Ask for help
       </h1>
 
       {/* What */}
@@ -24,7 +24,7 @@ export default function About() {
       </Section>
 
       {/* Method */}
-      <Section title="🧠 How it works (Method)">
+      <Section title="How it works (Method)">
         <p>
           This app does <strong>not</strong> use any paid AI API (OpenAI, Anthropic, etc.).
           All "smart" features are implemented locally:
@@ -60,7 +60,7 @@ export default function About() {
       </Section>
 
       {/* Limitations */}
-      <Section title="⚠️ Limitations">
+      <Section title="Limitations">
         <ul>
           <li>This tool does <strong>not</strong> understand the meaning of your text. It only restructures and rephrases based on templates and rules.</li>
           <li>Markov-generated phrases may occasionally sound awkward — deterministic fallbacks are used when output quality is low.</li>
@@ -70,7 +70,7 @@ export default function About() {
       </Section>
 
       {/* Privacy */}
-      <Section title="🔒 Privacy">
+      <Section title="Privacy">
         <ul>
           <li><strong>No login</strong> — no accounts, no passwords, no registration.</li>
           <li><strong>No server storage</strong> — all data lives in your browser's localStorage.</li>
@@ -81,12 +81,12 @@ export default function About() {
       </Section>
 
       {/* Accessibility */}
-      <Section title="♿ Accessibility Settings">
+      <Section title="Accessibility Settings">
         <AccessibilityControls />
       </Section>
 
       {/* Tech */}
-      <Section title="🛠️ Tech Stack">
+      <Section title="Tech Stack">
         <ul>
           <li>Vite + React + TypeScript (static build)</li>
           <li>No external UI library — custom MD3-inspired design tokens</li>

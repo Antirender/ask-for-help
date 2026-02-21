@@ -4,6 +4,7 @@
 
 import type { Suggestion } from '../core/heuristics';
 import type { AskDraft } from '../core/schema';
+import { IconLightbulb, IconRefresh } from './Icons';
 
 interface Props {
   suggestions: Suggestion[];
@@ -29,7 +30,6 @@ export default function SuggestionsPanel({
   if (suggestions.length === 0 && (!markovVariants || markovVariants.length === 0)) {
     return (
       <div className="suggestions-panel card" style={{ textAlign: 'center', padding: '24px' }}>
-        <div style={{ fontSize: '2rem', marginBottom: 8 }}>✨</div>
         <p className="text-muted text-sm">
           {isZh ? '看起来都不错！没有建议。' : 'Looking good! No suggestions.'}
         </p>
@@ -39,14 +39,14 @@ export default function SuggestionsPanel({
 
   return (
     <div className="suggestions-panel card">
-      <h3 style={{ fontSize: 'var(--fs-md)', fontWeight: 600, marginBottom: 'var(--sp-3)' }}>
-        {isZh ? '💡 建议' : '💡 Suggestions'}
+      <h3 style={{ fontSize: 'var(--fs-md)', fontWeight: 600, marginBottom: 'var(--sp-3)', display: 'flex', alignItems: 'center', gap: 6 }}>
+        {IconLightbulb({ size: 18 })} {isZh ? '建议' : 'Suggestions'}
       </h3>
 
       {doNow.length > 0 && (
         <div className="suggestion-group">
-          <h4 className="suggestion-group-title">
-            {isZh ? '🔴 需要处理' : '🔴 Do now'}
+          <h4 className="suggestion-group-title suggestion-priority-high">
+            {isZh ? '需要处理' : 'Do now'}
           </h4>
           {doNow.map((s) => (
             <SuggestionItem
@@ -62,8 +62,8 @@ export default function SuggestionsPanel({
 
       {niceToHave.length > 0 && (
         <div className="suggestion-group">
-          <h4 className="suggestion-group-title">
-            {isZh ? '🟡 建议改进' : '🟡 Nice to have'}
+          <h4 className="suggestion-group-title suggestion-priority-low">
+            {isZh ? '建议改进' : 'Nice to have'}
           </h4>
           {niceToHave.map((s) => (
             <SuggestionItem
@@ -79,8 +79,8 @@ export default function SuggestionsPanel({
 
       {markovVariants && markovVariants.length > 0 && (
         <div className="suggestion-group" style={{ marginTop: 'var(--sp-4)' }}>
-          <h4 className="suggestion-group-title">
-            {isZh ? '🔄 表达变体' : '🔄 Phrasing variants'}
+          <h4 className="suggestion-group-title" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            {IconRefresh({ size: 14 })} {isZh ? '表达变体' : 'Phrasing variants'}
           </h4>
           {markovVariants.map((v, i) => (
             <div key={i} className="variant-item">
@@ -107,6 +107,16 @@ export default function SuggestionsPanel({
           font-size: var(--fs-sm);
           font-weight: 600;
           margin-bottom: var(--sp-2);
+        }
+        .suggestion-priority-high {
+          color: var(--clr-error, #c0392b);
+          border-left: 3px solid var(--clr-error, #c0392b);
+          padding-left: var(--sp-2);
+        }
+        .suggestion-priority-low {
+          color: var(--clr-warning, #d4a017);
+          border-left: 3px solid var(--clr-warning, #d4a017);
+          padding-left: var(--sp-2);
         }
         .suggestion-item {
           display: flex;

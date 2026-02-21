@@ -12,7 +12,7 @@ interface Props {
 
 export default function TemplatePicker({ lang, onSelect }: Props) {
   const filtered = (templates as TemplatePreset[]).filter(
-    (t) => t.lang === lang || t.lang === 'en', // show all if not matching
+    (t) => t.lang === lang || t.lang === 'en', // show en for all langs, plus matching lang
   );
 
   return (
@@ -54,7 +54,7 @@ export default function TemplatePicker({ lang, onSelect }: Props) {
           transition: box-shadow var(--dur-fast), transform var(--dur-fast);
         }
         .template-card:hover { transform: translateY(-2px); }
-        .template-icon { font-size: 1.5rem; margin-bottom: 8px; }
+        .template-icon { font-size: var(--fs-sm); font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
         .template-info strong { display: block; margin-bottom: 2px; }
       `}</style>
     </div>
@@ -63,10 +63,10 @@ export default function TemplatePicker({ lang, onSelect }: Props) {
 
 function channelIcon(channel: string): string {
   switch (channel) {
-    case 'email': return '📧';
-    case 'slack': return '💬';
-    case 'issue': return '🐛';
-    case 'in_person': return '🗣️';
-    default: return '📝';
+    case 'email': return 'Email';
+    case 'slack': return 'Chat';
+    case 'issue': return 'Issue';
+    case 'in_person': return 'Talk';
+    default: return '—';
   }
 }

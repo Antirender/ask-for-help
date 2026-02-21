@@ -1,10 +1,13 @@
 /* ============================================================
    Wizard.tsx — Stepper, back/next, jump, progress, autosave
+   Validation warnings only appear after the user clicks Next.
    ============================================================ */
 
-import { useEffect } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { STEPS, STEP_META, validateStep, type StepId, type WizardAction, type WizardState } from '../core/machine';
 import { saveDraft } from '../core/storage';
+import { getGlobalLang } from './AppShell';
+import { IconArrowLeft, IconArrowRight, IconSkipForward, IconAlertTriangle } from './Icons';
 
 interface Props {
   state: WizardState;
@@ -15,15 +18,47 @@ interface Props {
 export default function Wizard({ state, dispatch, children }: Props) {
   const { currentStep, visited, draft } = state;
   const meta = STEP_META[currentStep];
-  const validation = validateStep(STEPS[currentStep], draft);
   const isFirst = currentStep === 0;
   const isLast = currentStep === STEPS.length - 1;
-  const lang = draft.lang;
+  const uiLang = getGlobalLang();
+
+  // Track which steps have had a "next" attempt — only those show warnings
+  const [submittedSteps, setSubmittedSteps] = useState<Set<number>>(new Set());
+  const prevStep = useRef(currentStep);
 
   // Autosave draft on every change
   useEffect(() => {
     saveDraft(draft);
   }, [draft]);
+
+  // Detect when step changes (user successfully moved or jumped)
+  useEffect(() => {
+    prevStep.current = currentStep;
+  }, [currentStep]);
+
+  const handleNext = () => {
+    // Mark current step as submitted so warnings become visible
+    setSubmittedSteps((prev) => {
+      const next = new Set(prev);
+      next.add(currentStep);
+      return next;
+    });
+    dispatch({ type: 'NEXT' });
+  };
+
+  // Only show warnings for steps the user has already tried to leave
+  const showWarnings = submittedSteps.has(currentStep);
+  const validation = validateStep(STEPS[currentStep], draft);
+
+  const stepLabel = (s: (typeof STEP_META)[number]) => {
+    if (uiLang === 'zh') return s.labelZh;
+    return s.label;
+  };
+
+  const stepDesc = (s: (typeof STEP_META)[number]) => {
+    if (uiLang === 'zh') return s.descriptionZh;
+    return s.description;
+  };
 
   return (
     <div className="wizard">
@@ -33,19 +68,19 @@ export default function Wizard({ state, dispatch, children }: Props) {
           const v = validateStep(s.id, draft);
           const isCurrent = i === currentStep;
           const isVisited = visited.has(i);
-          const hasWarning = isVisited && !v.ok;
+          const hasWarning = submittedSteps.has(i) && !v.ok;
 
           return (
             <button
               key={s.id}
               role="tab"
               aria-selected={isCurrent}
-              aria-label={`${lang === 'zh' ? s.labelZh : s.label}${hasWarning ? ' (needs attention)' : ''}`}
+              aria-label={`${stepLabel(s)}${hasWarning ? ' (needs attention)' : ''}`}
               className={`wizard-step ${isCurrent ? 'current' : ''} ${isVisited ? 'visited' : ''} ${hasWarning ? 'warning' : ''}`}
               onClick={() => dispatch({ type: 'JUMP', step: i })}
             >
               <span className="step-num">{i + 1}</span>
-              <span className="step-label">{lang === 'zh' ? s.labelZh : s.label}</span>
+              <span className="step-label">{stepLabel(s)}</span>
             </button>
           );
         })}
@@ -62,15 +97,19 @@ export default function Wizard({ state, dispatch, children }: Props) {
       {/* Step header */}
       <div className="wizard-header">
         <h2 className="wizard-title">
-          {lang === 'zh' ? meta.labelZh : meta.label}
+          {stepLabel(meta)}
         </h2>
         <p className="wizard-desc text-muted">
-          {lang === 'zh' ? meta.descriptionZh : meta.description}
+          {stepDesc(meta)}
         </p>
-        {validation.warnings.length > 0 && (
+        {/* Inline validation: only shown after submit attempt, uses compact styling */}
+        {showWarnings && validation.warnings.length > 0 && (
           <div className="wizard-warnings" role="alert">
             {validation.warnings.map((w, i) => (
-              <p key={i} className="wizard-warning-item">⚠️ {w}</p>
+              <p key={i} className="wizard-warning-item">
+                <span className="wizard-warning-icon">{IconAlertTriangle({ size: 14 })}</span>
+                {w}
+              </p>
             ))}
           </div>
         )}
@@ -86,24 +125,27 @@ export default function Wizard({ state, dispatch, children }: Props) {
         <div className="flex gap-3">
           {!isFirst && (
             <button className="btn btn-outline" onClick={() => dispatch({ type: 'BACK' })}>
-              ← {lang === 'zh' ? '上一步' : 'Back'}
+              {IconArrowLeft({ size: 16 })} {uiLang === 'zh' ? '上一步' : 'Back'}
             </button>
           )}
         </div>
 
-        <div className="flex gap-3">
+        <div className="flex gap-3 items-center">
           {!isLast && (
             <button
               className="btn btn-ghost btn-sm"
               onClick={() => dispatch({ type: 'NOT_SURE' })}
               title="Skip to review with what you have"
             >
-              {lang === 'zh' ? '🤷 不确定，直接预览' : "🤷 Not sure, skip to review"}
+              {IconSkipForward({ size: 14 })}
+              <span style={{ marginLeft: 4 }}>
+                {uiLang === 'zh' ? '跳到预览' : uiLang === 'fr' ? 'Aperçu' : 'Skip to review'}
+              </span>
             </button>
           )}
           {!isLast && (
-            <button className="btn btn-primary" onClick={() => dispatch({ type: 'NEXT' })}>
-              {lang === 'zh' ? '下一步' : 'Next'} →
+            <button className="btn btn-primary" onClick={handleNext}>
+              {uiLang === 'zh' ? '下一步' : uiLang === 'fr' ? 'Suivant' : 'Next'} {IconArrowRight({ size: 16 })}
             </button>
           )}
         </div>
@@ -186,13 +228,22 @@ export default function Wizard({ state, dispatch, children }: Props) {
         .wizard-desc { font-size: var(--fs-sm); }
         .wizard-warnings {
           margin-top: var(--sp-2);
-          padding: var(--sp-3);
+          padding: var(--sp-2) var(--sp-3);
           background: var(--clr-warning-container);
           border-radius: var(--radius-sm);
+          border-left: 3px solid var(--clr-warning);
         }
         .wizard-warning-item {
           font-size: var(--fs-sm);
           color: var(--clr-warning);
+          display: flex;
+          align-items: center;
+          gap: 6px;
+        }
+        .wizard-warning-icon {
+          flex-shrink: 0;
+          display: flex;
+          align-items: center;
         }
 
         .wizard-content { min-height: 200px; margin-bottom: var(--sp-6); }
@@ -208,6 +259,7 @@ export default function Wizard({ state, dispatch, children }: Props) {
         @media (max-width: 600px) {
           .step-label { display: none; }
           .wizard-step { min-width: 40px; padding: 6px; }
+          .wizard-nav { flex-wrap: wrap; gap: var(--sp-3); }
         }
       `}</style>
     </div>

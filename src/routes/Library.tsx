@@ -2,19 +2,30 @@
    Library.tsx — Templates & phrase bank browser
    ============================================================ */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import TemplatePicker from '../ui/TemplatePicker';
+import { getGlobalLang } from '../ui/AppShell';
 import phraseBankEn from '../data/phrase_bank_en.json';
 import phraseBankZh from '../data/phrase_bank_zh.json';
+import phraseBankFr from '../data/phrase_bank_fr.json';
 import type { AskDraft } from '../core/schema';
 
 export default function Library() {
-  const [lang, setLang] = useState<'en' | 'zh'>('en');
+  const [uiLang, setUiLang] = useState(getGlobalLang);
   const [tab, setTab] = useState<'templates' | 'phrases'>('templates');
-  const bank = lang === 'zh' ? phraseBankZh : phraseBankEn;
+
+  useEffect(() => {
+    const handler = () => setUiLang(getGlobalLang());
+    window.addEventListener('ask4help_lang_change', handler);
+    return () => window.removeEventListener('ask4help_lang_change', handler);
+  }, []);
+
+  const bank = uiLang === 'zh' ? phraseBankZh : uiLang === 'fr' ? phraseBankFr : phraseBankEn;
+  const isZh = uiLang === 'zh';
+  const isFr = uiLang === 'fr';
+  const t = (en: string, zh: string, fr: string) => isZh ? zh : isFr ? fr : en;
 
   const handleSelect = (patch: Partial<AskDraft>) => {
-    // Save selection to draft and navigate to builder
     const saved = localStorage.getItem('ask4help_draft');
     const draft = saved ? JSON.parse(saved) : {};
     localStorage.setItem('ask4help_draft', JSON.stringify({ ...draft, ...patch }));
@@ -24,47 +35,41 @@ export default function Library() {
   return (
     <div className="container page-enter">
       <h1 style={{ fontSize: 'var(--fs-xl)', fontWeight: 700, marginBottom: 'var(--sp-2)' }}>
-        📚 {lang === 'zh' ? '模板与短语库' : 'Template Library'}
+        {t('Template Library', '模板与短语库', 'Bibliothèque de modèles')}
       </h1>
       <p className="text-muted text-sm mb-6">
-        {lang === 'zh'
-          ? '选择一个模板快速开始，或浏览常用短语。'
-          : 'Pick a template to quick-start, or browse common phrases.'}
+        {t(
+          'Pick a template to quick-start, or browse common phrases.',
+          '选择一个模板快速开始，或浏览常用短语。',
+          'Choisissez un modèle pour démarrer, ou parcourez les phrases courantes.'
+        )}
       </p>
 
-      {/* Controls */}
+      {/* Tab controls only — lang comes from global header */}
       <div className="flex gap-3 items-center mb-6 flex-wrap">
         <div className="flex gap-2">
           <button className={`chip ${tab === 'templates' ? 'chip-active' : ''}`} onClick={() => setTab('templates')}>
-            {lang === 'zh' ? '模板' : 'Templates'}
+            {t('Templates', '模板', 'Modèles')}
           </button>
           <button className={`chip ${tab === 'phrases' ? 'chip-active' : ''}`} onClick={() => setTab('phrases')}>
-            {lang === 'zh' ? '短语库' : 'Phrase Bank'}
-          </button>
-        </div>
-        <div className="flex gap-2" style={{ marginLeft: 'auto' }}>
-          <button className={`chip ${lang === 'en' ? 'chip-active' : ''}`} onClick={() => setLang('en')}>
-            EN
-          </button>
-          <button className={`chip ${lang === 'zh' ? 'chip-active' : ''}`} onClick={() => setLang('zh')}>
-            中文
+            {t('Phrase Bank', '短语库', 'Banque de phrases')}
           </button>
         </div>
       </div>
 
       {/* Content */}
-      {tab === 'templates' && <TemplatePicker lang={lang} onSelect={handleSelect} />}
+      {tab === 'templates' && <TemplatePicker lang={uiLang} onSelect={handleSelect} />}
 
       {tab === 'phrases' && (
         <div className="phrase-sections">
-          <PhraseSection title={lang === 'zh' ? '打招呼' : 'Salutations'} data={bank.salutations} />
-          <PhraseSection title={lang === 'zh' ? '结尾' : 'Closings'} data={bank.closings} />
-          <PhraseSection title={lang === 'zh' ? '目标句式' : 'Goal starters'} data={bank.goal_starters} isList />
-          <PhraseSection title={lang === 'zh' ? '背景句式' : 'Context phrases'} data={bank.context_phrases} isList />
-          <PhraseSection title={lang === 'zh' ? '请求句式' : 'Ask phrases'} data={bank.ask_phrases} />
-          <PhraseSection title={lang === 'zh' ? '时间句式' : 'Timebox phrases'} data={bank.timebox_phrases} isList />
-          <PhraseSection title={lang === 'zh' ? '退出选项' : 'Exit options'} data={bank.exit_options} isList />
-          <PhraseSection title={lang === 'zh' ? '邮件主题' : 'Subject lines'} data={bank.subject_lines} />
+          <PhraseSection title={t('Salutations', '打招呼', 'Salutations')} data={bank.salutations} />
+          <PhraseSection title={t('Closings', '结尾', 'Conclusions')} data={bank.closings} />
+          <PhraseSection title={t('Goal starters', '目标句式', 'Débuts d\'objectif')} data={bank.goal_starters} isList />
+          <PhraseSection title={t('Context phrases', '背景句式', 'Phrases de contexte')} data={bank.context_phrases} isList />
+          <PhraseSection title={t('Ask phrases', '请求句式', 'Phrases de demande')} data={bank.ask_phrases} />
+          <PhraseSection title={t('Timebox phrases', '时间句式', 'Phrases de délai')} data={bank.timebox_phrases} isList />
+          <PhraseSection title={t('Exit options', '退出选项', 'Options de sortie')} data={bank.exit_options} isList />
+          <PhraseSection title={t('Subject lines', '邮件主题', 'Lignes d\'objet')} data={bank.subject_lines} />
         </div>
       )}
     </div>

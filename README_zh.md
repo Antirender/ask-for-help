@@ -1,6 +1,6 @@
 # Ask for Help – 智能求助信息撰写工具
 
-> English version: [README.md](README.md)
+> English version: [README.md](README.md) · Version française: [README_fr.md](README_fr.md)
 
 一款完全离线、隐私优先的 Web 工具，引导学生和职场人士写出清晰、有上下文支撑的求助信息 —— 内置启发式伪 AI 引擎、Markov n-gram 变体生成、五维评分，以及本地历史记录与导出功能。
 
@@ -17,7 +17,12 @@
 | **Markov 三元模型** | 从精选语料库生成备选措辞，无需任何 API |
 | **五维评分** | 清晰度·努力程度·具体性·礼貌度·简洁度（0–100，颜色编码） |
 | **多格式输出** | 标准版 / 简短版（≤7行）/ 超短版（≤3行）× 4种渠道（邮件、聊天、论坛、面谈） |
-| **双语支持** | 完整中英文支持（短语库、模板、界面） |
+| **三语支持（中/英/法）** | 中文、英文、法文完整支持 —— 短语库、18套模板、全界面文案 |
+| **全局语言与主题切换** | 顶栏统一管理语言（EN/ZH/FR）与亮色/暗色切换，应用范围全局生效 |
+| **延迟验证** | 表单验证仅在步骤提交后触发，避免未完成输入时出现干扰提示 |
+| **SVG 图标系统** | 内联 SVG 图标替代 emoji，语义清晰、无障碍友好、显示一致 |
+| **18套预置模板** | 涵盖中文、英文、法文场景，覆盖学术与职场用途 |
+| **响应式布局** | 移动端 / 平板 / 宽屏自适应（审阅步骤宽屏下双栏显示） |
 | **本地历史与导出** | 证据日志存储于 `localStorage`；支持导出为 JSON 或 CSV |
 | **无障碍访问** | 符合 WCAG 2.1 AA —— 字号滑块、高对比度模式、减少动效切换、焦点可见环 |
 | **MD3 设计风格** | Material Design 3 设计令牌，亮色/暗色主题切换 |
@@ -77,15 +82,16 @@ app/
 │   │   ├── scoring.ts          # 五维评分
 │   │   └── storage.ts          # localStorage 持久化 + CSV/JSON 导出
 │   ├── data/
-│   │   ├── templates.json      # 10套预置模板（中英文）
+│   │   ├── templates.json      # 18套预置模板（中/英/法）
 │   │   ├── phrase_bank_en.json # 英文短语库
 │   │   ├── phrase_bank_zh.json # 中文短语库
+│   │   ├── phrase_bank_fr.json # 法文短语库
 │   │   ├── markov_corpus_en.txt
 │   │   └── markov_corpus_zh.txt
 │   ├── styles/
 │   │   ├── tokens.css          # MD3 设计令牌
-│   │   ├── themes.css          # 亮色 / 暗色 / 高对比度主题
-│   │   └── components.css      # 组件样式
+│   │   ├── themes.css          # 亮色/暗色/高对比度主题（含顶栏 CSS 变量）
+│   │   └── components.css      # 组件样式（含响应式断点）
 │   ├── routes/
 │   │   ├── Home.tsx
 │   │   ├── Builder.tsx         # 主向导页面
@@ -93,8 +99,9 @@ app/
 │   │   ├── History.tsx         # 证据日志
 │   │   └── About.tsx           # 方法说明 + 无障碍设置
 │   └── ui/
-│       ├── AppShell.tsx
-│       ├── Wizard.tsx
+│       ├── AppShell.tsx        # 全局顶栏（语言/主题切换）
+│       ├── Icons.tsx           # 内联 SVG 图标系统
+│       ├── Wizard.tsx          # 引导向导（延迟验证）
 │       ├── FieldCard.tsx
 │       ├── PreviewPane.tsx
 │       ├── SuggestionsPanel.tsx

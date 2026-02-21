@@ -42,7 +42,7 @@ export default function AccessibilityControls() {
   return (
     <div className="a11y-controls card">
       <h3 style={{ fontSize: 'var(--fs-md)', fontWeight: 600, marginBottom: 'var(--sp-3)' }}>
-        ♿ Accessibility
+        Accessibility
       </h3>
 
       <div className="a11y-row">

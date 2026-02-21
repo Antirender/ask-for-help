@@ -30,7 +30,6 @@ export default function App() {
       <Suspense
         fallback={
           <div className="container text-center" style={{ padding: '64px 16px' }}>
-            <div style={{ fontSize: '2rem', marginBottom: 16 }}>⏳</div>
             <p className="text-muted">Loading…</p>
           </div>
         }
@@ -42,7 +41,6 @@ export default function App() {
         {route === '/about' && <About />}
         {!['/','/build','/library','/history','/about'].includes(route) && (
           <div className="container text-center" style={{ padding: '64px 16px' }}>
-            <div style={{ fontSize: '3rem', marginBottom: 16 }}>🫣</div>
             <h1 style={{ fontSize: 'var(--fs-xl)', fontWeight: 700 }}>Page not found</h1>
             <p className="text-muted mt-2">
               <a href="#/">Go home</a>

@@ -24,10 +24,12 @@ import { generateOutput } from '../core/generator';
 import { scoreDraft, scoreColor, scoreLabel } from '../core/scoring';
 import { buildMarkovModel, generateVariant, type MarkovModel } from '../core/markov';
 import { saveToHistory, loadDraft, clearDraft } from '../core/storage';
+import { getGlobalLang } from '../ui/AppShell';
 import Wizard from '../ui/Wizard';
 import FieldCard from '../ui/FieldCard';
 import PreviewPane from '../ui/PreviewPane';
 import SuggestionsPanel from '../ui/SuggestionsPanel';
+import { IconSave, IconRefresh, IconWand } from '../ui/Icons';
 
 import corpusEnUrl from '../data/markov_corpus_en.txt?raw';
 import corpusZhUrl from '../data/markov_corpus_zh.txt?raw';
@@ -42,6 +44,22 @@ export default function Builder() {
   const { draft } = state;
   const stepId = STEPS[state.currentStep];
 
+  // Sync draft.lang with global language setting
+  useEffect(() => {
+    const gLang = getGlobalLang();
+    const mapped: Lang = gLang === 'fr' ? 'en' : gLang as Lang;
+    if (draft.lang !== mapped && mapped !== 'mix') {
+      dispatch({ type: 'UPDATE_DRAFT', patch: { lang: mapped } });
+    }
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent).detail as string;
+      const m: Lang = detail === 'fr' ? 'en' : (detail as Lang);
+      if (m !== 'mix') dispatch({ type: 'UPDATE_DRAFT', patch: { lang: m } });
+    };
+    window.addEventListener('ask4help_lang_change', handler);
+    return () => window.removeEventListener('ask4help_lang_change', handler);
+  }, []);
+
   // Markov models
   const [markovEn, setMarkovEn] = useState<MarkovModel | null>(null);
   const [markovZh, setMarkovZh] = useState<MarkovModel | null>(null);
@@ -53,6 +71,11 @@ export default function Builder() {
   }, []);
 
   const markov = draft.lang === 'zh' ? markovZh : markovEn;
+  const uiLang = getGlobalLang();
+  const isZh = uiLang === 'zh';
+  const isFr = uiLang === 'fr';
+
+  const t = (en: string, zh: string, fr: string) => isZh ? zh : isFr ? fr : en;
 
   // Computed
   const suggestions = useMemo(() => analyzeAskDraft(draft), [draft]);
@@ -86,13 +109,13 @@ export default function Builder() {
 
   const handleSaveToHistory = () => {
     saveToHistory(draft, output, score);
-    showSnack(draft.lang === 'zh' ? '✓ 已保存到历史' : '✓ Saved to history');
+    showSnack(isZh ? '已保存到历史' : isFr ? 'Sauvegardé' : 'Saved to history');
   };
 
   const handleNewDraft = () => {
     clearDraft();
     dispatch({ type: 'RESET', draft: emptyDraft() });
-    showSnack(draft.lang === 'zh' ? '✓ 已重置' : '✓ Reset');
+    showSnack(isZh ? '已重置' : isFr ? 'Réinitialisé' : 'Reset');
   };
 
   const handleJumpToField = (field: string) => {
@@ -117,13 +140,11 @@ export default function Builder() {
     updateDraft({ [field]: rewritten });
   };
 
-  const isZh = draft.lang === 'zh';
-
   return (
     <div className="container">
       <Wizard state={state} dispatch={dispatch as (a: WizardAction) => void}>
         {stepId === 'seed' && (
-          <SeedStep draft={draft} updateDraft={updateDraft} isZh={isZh} />
+          <SeedStep draft={draft} updateDraft={updateDraft} t={t} />
         )}
         {stepId === 'goal' && (
           <TextFieldStep
@@ -132,7 +153,7 @@ export default function Builder() {
             onChange={(v) => updateDraft({ goal: v })}
             placeholder={isZh ? '例如：理解作业第3题的递归思路' : 'e.g., Understand the recursive approach for Q3'}
             onRewrite={(style) => handleRewrite('goal', style)}
-            isZh={isZh}
+            t={t}
           />
         )}
         {stepId === 'context' && (
@@ -142,12 +163,12 @@ export default function Builder() {
             onChange={(v) => updateDraft({ context: v })}
             placeholder={isZh ? '例如：这是 COMP 101 的期末项目…' : 'e.g., This is for the COMP 101 final project…'}
             onRewrite={(style) => handleRewrite('context', style)}
-            isZh={isZh}
+            t={t}
             multiline
           />
         )}
         {stepId === 'tried' && (
-          <TriedStep tried={draft.tried} updateDraft={updateDraft} isZh={isZh} />
+          <TriedStep tried={draft.tried} updateDraft={updateDraft} t={t} />
         )}
         {stepId === 'block' && (
           <TextFieldStep
@@ -156,18 +177,18 @@ export default function Builder() {
             onChange={(v) => updateDraft({ block: v })}
             placeholder={isZh ? '例如：运行到第4步时报错 TypeError…' : 'e.g., Step 4 throws TypeError…'}
             onRewrite={(style) => handleRewrite('block', style)}
-            isZh={isZh}
+            t={t}
             multiline
           />
         )}
         {stepId === 'ask' && (
-          <AskStep draft={draft} updateDraft={updateDraft} isZh={isZh} onRewrite={(s) => handleRewrite('askDetail', s)} />
+          <AskStep draft={draft} updateDraft={updateDraft} t={t} onRewrite={(s) => handleRewrite('askDetail', s)} />
         )}
         {stepId === 'timebox' && (
-          <TimeboxStep draft={draft} updateDraft={updateDraft} isZh={isZh} />
+          <TimeboxStep draft={draft} updateDraft={updateDraft} t={t} />
         )}
         {stepId === 'attachments' && (
-          <AttachmentsStep draft={draft} updateDraft={updateDraft} isZh={isZh} />
+          <AttachmentsStep draft={draft} updateDraft={updateDraft} t={t} />
         )}
         {stepId === 'review' && (
           <ReviewStep
@@ -176,7 +197,7 @@ export default function Builder() {
             score={score}
             suggestions={suggestions}
             variants={variants}
-            isZh={isZh}
+            t={t}
             onApplyFix={updateDraft}
             onJumpToField={handleJumpToField}
             onApplyVariant={() => regenerateVariants()}
@@ -198,34 +219,17 @@ export default function Builder() {
    Step sub-components
    ============================================================ */
 
-/* --- Seed step --- */
-function SeedStep({ draft, updateDraft, isZh }: { draft: AskDraft; updateDraft: (p: Partial<AskDraft>) => void; isZh: boolean }) {
+type T = (en: string, zh: string, fr: string) => string;
+
+/* --- Seed step (no Language here — it's global now) --- */
+function SeedStep({ draft, updateDraft, t }: { draft: AskDraft; updateDraft: (p: Partial<AskDraft>) => void; t: T }) {
   const recipientTypes: RecipientType[] = ['Professor', 'TA', 'Teammate', 'Mentor', 'Support', 'Forum', 'Other'];
   const channels: Channel[] = ['email', 'slack', 'issue', 'in_person'];
   const tones: Tone[] = ['polite', 'direct', 'warm', 'urgent'];
-  const langs: { value: Lang; label: string }[] = [
-    { value: 'en', label: 'English' },
-    { value: 'zh', label: '中文' },
-    { value: 'mix', label: 'Mixed 混合' },
-  ];
 
   return (
     <div className="flex flex-col gap-4">
-      <FieldCard title={isZh ? '语言' : 'Language'}>
-        <div className="flex gap-2 flex-wrap">
-          {langs.map((l) => (
-            <button
-              key={l.value}
-              className={`chip ${draft.lang === l.value ? 'chip-active' : ''}`}
-              onClick={() => updateDraft({ lang: l.value })}
-            >
-              {l.label}
-            </button>
-          ))}
-        </div>
-      </FieldCard>
-
-      <FieldCard title={isZh ? '接收者' : 'Recipient'} hint={isZh ? '你要找谁帮忙？' : 'Who are you asking?'}>
+      <FieldCard title={t('Recipient', '接收者', 'Destinataire')} hint={t('Who are you asking?', '你要找谁帮忙？', 'À qui demandez-vous ?')}>
         <div className="flex gap-2 flex-wrap">
           {recipientTypes.map((r) => (
             <button
@@ -239,7 +243,7 @@ function SeedStep({ draft, updateDraft, isZh }: { draft: AskDraft; updateDraft: 
         </div>
       </FieldCard>
 
-      <FieldCard title={isZh ? '沟通方式' : 'Channel'}>
+      <FieldCard title={t('Channel', '沟通方式', 'Canal')}>
         <div className="flex gap-2 flex-wrap">
           {channels.map((c) => (
             <button
@@ -253,15 +257,15 @@ function SeedStep({ draft, updateDraft, isZh }: { draft: AskDraft; updateDraft: 
         </div>
       </FieldCard>
 
-      <FieldCard title={isZh ? '语气' : 'Tone'}>
+      <FieldCard title={t('Tone', '语气', 'Ton')}>
         <div className="flex gap-2 flex-wrap">
-          {tones.map((t) => (
+          {tones.map((tn) => (
             <button
-              key={t}
-              className={`chip ${draft.tone === t ? 'chip-active' : ''}`}
-              onClick={() => updateDraft({ tone: t })}
+              key={tn}
+              className={`chip ${draft.tone === tn ? 'chip-active' : ''}`}
+              onClick={() => updateDraft({ tone: tn })}
             >
-              {toneLabel(t)}
+              {toneLabel(tn)}
             </button>
           ))}
         </div>
@@ -272,22 +276,22 @@ function SeedStep({ draft, updateDraft, isZh }: { draft: AskDraft; updateDraft: 
 
 function channelLabel(c: Channel): string {
   const map: Record<Channel, string> = {
-    email: '📧 Email',
-    slack: '💬 Slack / Discord',
-    issue: '🐛 Issue / Forum',
-    in_person: '🗣️ In-person',
+    email: 'Email',
+    slack: 'Slack / Discord',
+    issue: 'Issue / Forum',
+    in_person: 'In-person',
   };
   return map[c];
 }
 
-function toneLabel(t: Tone): string {
+function toneLabel(tn: Tone): string {
   const map: Record<Tone, string> = {
-    polite: '🎩 Polite',
-    direct: '🎯 Direct',
-    warm: '☀️ Warm',
-    urgent: '⏰ Urgent',
+    polite: 'Polite',
+    direct: 'Direct',
+    warm: 'Warm',
+    urgent: 'Urgent',
   };
-  return map[t];
+  return map[tn];
 }
 
 /* --- Text field step --- */
@@ -297,7 +301,7 @@ function TextFieldStep({
   onChange,
   placeholder,
   onRewrite,
-  isZh,
+  t,
   multiline,
 }: {
   field: string;
@@ -305,14 +309,14 @@ function TextFieldStep({
   onChange: (v: string) => void;
   placeholder: string;
   onRewrite: (style: RewriteStyle) => void;
-  isZh: boolean;
+  t: T;
   multiline?: boolean;
 }) {
-  const rewriteButtons: { style: RewriteStyle; label: string; labelZh: string }[] = [
-    { style: 'clearer', label: 'Make clearer', labelZh: '更清晰' },
-    { style: 'shorter', label: 'Make shorter', labelZh: '更简短' },
-    { style: 'more-polite', label: 'More polite', labelZh: '更礼貌' },
-    { style: 'more-direct', label: 'More direct', labelZh: '更直接' },
+  const rewriteButtons: { style: RewriteStyle; label: string }[] = [
+    { style: 'clearer', label: t('Clearer', '更清晰', 'Plus clair') },
+    { style: 'shorter', label: t('Shorter', '更简短', 'Plus court') },
+    { style: 'more-polite', label: t('More polite', '更礼貌', 'Plus poli') },
+    { style: 'more-direct', label: t('More direct', '更直接', 'Plus direct') },
   ];
 
   return (
@@ -342,7 +346,7 @@ function TextFieldStep({
               className="btn btn-ghost btn-sm"
               onClick={() => onRewrite(rb.style)}
             >
-              ✨ {isZh ? rb.labelZh : rb.label}
+              {IconWand({ size: 14 })} <span style={{ marginLeft: 2 }}>{rb.label}</span>
             </button>
           ))}
         </div>
@@ -355,11 +359,11 @@ function TextFieldStep({
 function TriedStep({
   tried,
   updateDraft,
-  isZh,
+  t,
 }: {
   tried: string[];
   updateDraft: (p: Partial<AskDraft>) => void;
-  isZh: boolean;
+  t: T;
 }) {
   const items = tried.length === 0 ? [''] : tried;
 
@@ -378,8 +382,8 @@ function TriedStep({
 
   return (
     <FieldCard
-      title={isZh ? '已尝试的方法' : 'What you\'ve tried'}
-      hint={isZh ? '列出你已经做过的尝试（至少1项效果更好）' : 'List what you already attempted (at least 1 recommended)'}
+      title={t("What you've tried", '已尝试的方法', 'Ce que vous avez essayé')}
+      hint={t('List what you already attempted (at least 1 recommended)', '列出你已经做过的尝试（至少1项效果更好）', 'Listez ce que vous avez déjà essayé')}
     >
       {items.map((item, i) => (
         <div key={i} className="flex gap-2 items-center">
@@ -388,16 +392,18 @@ function TriedStep({
             type="text"
             value={item}
             onChange={(e) => update(i, e.target.value)}
-            placeholder={isZh ? `尝试 ${i + 1}…` : `Attempt ${i + 1}…`}
+            placeholder={t(`Attempt ${i + 1}…`, `尝试 ${i + 1}…`, `Tentative ${i + 1}…`)}
             aria-label={`Attempt ${i + 1}`}
           />
           {items.length > 1 && (
-            <button className="btn-icon" onClick={() => remove(i)} aria-label="Remove attempt">✕</button>
+            <button className="btn-icon" onClick={() => remove(i)} aria-label="Remove attempt">
+              <span aria-hidden="true" style={{ fontSize: '1rem', lineHeight: 1 }}>×</span>
+            </button>
           )}
         </div>
       ))}
       <button className="btn btn-outline btn-sm" onClick={add} style={{ alignSelf: 'flex-start' }}>
-        + {isZh ? '添加' : 'Add'}
+        + {t('Add', '添加', 'Ajouter')}
       </button>
     </FieldCard>
   );
@@ -407,25 +413,25 @@ function TriedStep({
 function AskStep({
   draft,
   updateDraft,
-  isZh,
+  t,
   onRewrite,
 }: {
   draft: AskDraft;
   updateDraft: (p: Partial<AskDraft>) => void;
-  isZh: boolean;
+  t: T;
   onRewrite: (style: RewriteStyle) => void;
 }) {
-  const askTypes: { value: AskType; label: string; labelZh: string; icon: string }[] = [
-    { value: 'answer', label: 'Answer', labelZh: '回答', icon: '💡' },
-    { value: 'direction', label: 'Direction', labelZh: '方向', icon: '🧭' },
-    { value: 'review', label: 'Review', labelZh: '审查', icon: '👀' },
-    { value: 'confirm', label: 'Confirm', labelZh: '确认', icon: '✅' },
-    { value: 'recommend', label: 'Recommend', labelZh: '推荐', icon: '⭐' },
+  const askTypes: { value: AskType; label: string }[] = [
+    { value: 'answer', label: t('Answer', '回答', 'Réponse') },
+    { value: 'direction', label: t('Direction', '方向', 'Direction') },
+    { value: 'review', label: t('Review', '审查', 'Revue') },
+    { value: 'confirm', label: t('Confirm', '确认', 'Confirmer') },
+    { value: 'recommend', label: t('Recommend', '推荐', 'Recommander') },
   ];
 
   return (
     <div className="flex flex-col gap-4">
-      <FieldCard title={isZh ? '请求类型' : 'What do you need?'} required>
+      <FieldCard title={t('What do you need?', '请求类型', 'De quoi avez-vous besoin ?')} required>
         <div className="flex gap-2 flex-wrap">
           {askTypes.map((a) => (
             <button
@@ -433,7 +439,7 @@ function AskStep({
               className={`chip ${draft.askType === a.value ? 'chip-active' : ''}`}
               onClick={() => updateDraft({ askType: a.value })}
             >
-              {a.icon} {isZh ? a.labelZh : a.label}
+              {a.label}
             </button>
           ))}
         </div>
@@ -443,9 +449,9 @@ function AskStep({
         field="askDetail"
         value={draft.askDetail}
         onChange={(v) => updateDraft({ askDetail: v })}
-        placeholder={isZh ? '具体描述你需要什么…' : 'Describe specifically what you need…'}
+        placeholder={t('Describe specifically what you need…', '具体描述你需要什么…', 'Décrivez précisément ce dont vous avez besoin…')}
         onRewrite={onRewrite}
-        isZh={isZh}
+        t={t}
         multiline
       />
     </div>
@@ -453,12 +459,12 @@ function AskStep({
 }
 
 /* --- Timebox step --- */
-function TimeboxStep({ draft, updateDraft, isZh }: { draft: AskDraft; updateDraft: (p: Partial<AskDraft>) => void; isZh: boolean }) {
+function TimeboxStep({ draft, updateDraft, t }: { draft: AskDraft; updateDraft: (p: Partial<AskDraft>) => void; t: T }) {
   const options: TimeboxMin[] = [2, 5, 10, 15, 20];
 
   return (
     <div className="flex flex-col gap-4">
-      <FieldCard title={isZh ? '预计时间' : 'Time estimate'} hint={isZh ? '对方大概需要花多少分钟？' : 'How many minutes will this take them?'}>
+      <FieldCard title={t('Time estimate', '预计时间', 'Estimation du temps')} hint={t('How many minutes will this take them?', '对方大概需要花多少分钟？', 'Combien de minutes cela prendra-t-il ?')}>
         <div className="flex gap-2 flex-wrap">
           {options.map((m) => (
             <button
@@ -466,18 +472,18 @@ function TimeboxStep({ draft, updateDraft, isZh }: { draft: AskDraft; updateDraf
               className={`chip ${draft.timeboxMin === m ? 'chip-active' : ''}`}
               onClick={() => updateDraft({ timeboxMin: m })}
             >
-              {m} {isZh ? '分钟' : 'min'}
+              {m} {t('min', '分钟', 'min')}
             </button>
           ))}
         </div>
       </FieldCard>
 
-      <FieldCard title={isZh ? '截止日期（可选）' : 'Deadline (optional)'}>
+      <FieldCard title={t('Deadline (optional)', '截止日期（可选）', 'Date limite (optionnel)')}>
         <input
           type="text"
           value={draft.deadline || ''}
           onChange={(e) => updateDraft({ deadline: e.target.value || null })}
-          placeholder={isZh ? '例如：周五 5pm 之前' : 'e.g., Friday 5pm'}
+          placeholder={t('e.g., Friday 5pm', '例如：周五 5pm 之前', 'ex. Vendredi 17h')}
           aria-label="Deadline"
         />
       </FieldCard>
@@ -486,7 +492,7 @@ function TimeboxStep({ draft, updateDraft, isZh }: { draft: AskDraft; updateDraf
 }
 
 /* --- Attachments step --- */
-function AttachmentsStep({ draft, updateDraft, isZh }: { draft: AskDraft; updateDraft: (p: Partial<AskDraft>) => void; isZh: boolean }) {
+function AttachmentsStep({ draft, updateDraft, t }: { draft: AskDraft; updateDraft: (p: Partial<AskDraft>) => void; t: T }) {
   const links = draft.links.length === 0 ? [{ label: '', url: '' }] : draft.links;
 
   const updateLink = (index: number, field: 'label' | 'url', value: string) => {
@@ -504,14 +510,14 @@ function AttachmentsStep({ draft, updateDraft, isZh }: { draft: AskDraft; update
 
   return (
     <div className="flex flex-col gap-4">
-      <FieldCard title={isZh ? '参考链接' : 'Reference links'} hint={isZh ? '添加相关链接（可选）' : 'Add relevant links (optional)'}>
+      <FieldCard title={t('Reference links', '参考链接', 'Liens de référence')} hint={t('Add relevant links (optional)', '添加相关链接（可选）', 'Ajoutez des liens pertinents (optionnel)')}>
         {links.map((link, i) => (
           <div key={i} className="flex gap-2 items-center flex-wrap">
             <input
               type="text"
               value={link.label}
               onChange={(e) => updateLink(i, 'label', e.target.value)}
-              placeholder={isZh ? '标签' : 'Label'}
+              placeholder={t('Label', '标签', 'Libellé')}
               style={{ flex: '1 1 120px' }}
               aria-label={`Link ${i + 1} label`}
             />
@@ -524,20 +530,22 @@ function AttachmentsStep({ draft, updateDraft, isZh }: { draft: AskDraft; update
               aria-label={`Link ${i + 1} URL`}
             />
             {links.length > 1 && (
-              <button className="btn-icon" onClick={() => removeLink(i)} aria-label="Remove link">✕</button>
+              <button className="btn-icon" onClick={() => removeLink(i)} aria-label="Remove link">
+                <span aria-hidden="true" style={{ fontSize: '1rem', lineHeight: 1 }}>×</span>
+              </button>
             )}
           </div>
         ))}
         <button className="btn btn-outline btn-sm" onClick={addLink} style={{ alignSelf: 'flex-start' }}>
-          + {isZh ? '添加链接' : 'Add link'}
+          + {t('Add link', '添加链接', 'Ajouter un lien')}
         </button>
       </FieldCard>
 
-      <FieldCard title={isZh ? '附件说明' : 'Attachments note'} hint={isZh ? '描述截图或附件（可选）' : 'Describe screenshots or attachments (optional)'}>
+      <FieldCard title={t('Attachments note', '附件说明', 'Note sur les pièces jointes')} hint={t('Describe screenshots or attachments (optional)', '描述截图或附件（可选）', 'Décrivez les captures ou pièces jointes (optionnel)')}>
         <textarea
           value={draft.attachmentsNote || ''}
           onChange={(e) => updateDraft({ attachmentsNote: e.target.value || null })}
-          placeholder={isZh ? '例如：见附件截图，显示了错误信息…' : 'e.g., See attached screenshot showing the error…'}
+          placeholder={t('e.g., See attached screenshot showing the error…', '例如：见附件截图，显示了错误信息…', "ex. Voir la capture d'écran jointe montrant l'erreur…")}
           rows={3}
           aria-label="Attachments note"
         />
@@ -553,7 +561,7 @@ function ReviewStep({
   score,
   suggestions,
   variants,
-  isZh,
+  t,
   onApplyFix,
   onJumpToField,
   onApplyVariant,
@@ -565,7 +573,7 @@ function ReviewStep({
   score: ReturnType<typeof scoreDraft>;
   suggestions: ReturnType<typeof analyzeAskDraft>;
   variants: { section: string; text: string }[];
-  isZh: boolean;
+  t: T;
   onApplyFix: (patch: Partial<AskDraft>) => void;
   onJumpToField: (field: string) => void;
   onApplyVariant: () => void;
@@ -596,7 +604,7 @@ function ReviewStep({
         </div>
         {score.tips.length > 0 && (
           <div className="mt-4" style={{ textAlign: 'left' }}>
-            <p className="text-sm font-semibold mb-2">{isZh ? '改进建议：' : 'Improvement tips:'}</p>
+            <p className="text-sm font-semibold mb-2">{t('Improvement tips:', '改进建议：', "Conseils d'amélioration :")}</p>
             {score.tips.map((tip, i) => (
               <p key={i} className="text-sm text-muted">• {tip}</p>
             ))}
@@ -622,10 +630,10 @@ function ReviewStep({
       {/* Actions */}
       <div className="flex gap-3 justify-center mt-6 flex-wrap">
         <button className="btn btn-primary" onClick={onSave}>
-          💾 {isZh ? '保存到历史' : 'Save to history'}
+          {IconSave({ size: 16 })} <span style={{ marginLeft: 4 }}>{t('Save to history', '保存到历史', 'Sauvegarder')}</span>
         </button>
         <button className="btn btn-outline" onClick={onNew}>
-          🔄 {isZh ? '新建请求' : 'New request'}
+          {IconRefresh({ size: 16 })} <span style={{ marginLeft: 4 }}>{t('New request', '新建请求', 'Nouvelle demande')}</span>
         </button>
       </div>
     </div>

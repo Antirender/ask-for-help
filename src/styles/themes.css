@@ -14,6 +14,15 @@
   --accent:        var(--clr-primary);
   --accent-text:   var(--clr-on-primary);
   --focus-ring:    rgba(59, 92, 204, 0.45);
+
+  /* Header — use a contrasting dark bar in light mode for readability */
+  --header-bg:          #1e1e28;
+  --header-border:      #2e2e38;
+  --header-text:        #e4e4ea;
+  --header-text-muted:  #9a9aa4;
+  --header-hover:       rgba(255, 255, 255, 0.08);
+  --header-active-bg:   rgba(168, 184, 255, 0.18);
+  --header-active-text: #c8d4ff;
 }
 
 /* --- Dark theme --- */
@@ -44,6 +53,15 @@
   --accent:        var(--clr-primary);
   --accent-text:   var(--clr-on-primary);
   --focus-ring:    rgba(168, 184, 255, 0.45);
+
+  /* Header — matches overall dark surface */
+  --header-bg:          var(--clr-surface-bright);
+  --header-border:      var(--clr-outline-var);
+  --header-text:        var(--clr-on-surface);
+  --header-text-muted:  var(--clr-on-surface-var);
+  --header-hover:       rgba(255, 255, 255, 0.06);
+  --header-active-bg:   rgba(168, 184, 255, 0.14);
+  --header-active-text: var(--clr-primary);
 }
 
 /* --- High contrast overlay --- */

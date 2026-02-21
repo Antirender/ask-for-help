@@ -158,5 +158,117 @@
       "askType": "review",
       "timeboxMin": 10
     }
+  },
+  {
+    "id": "professor-email-polite-fr",
+    "recipientType": "Professor",
+    "channel": "email",
+    "tone": "polite",
+    "lang": "fr",
+    "label": "Courriel au professeur (poli)",
+    "description": "Un courriel structuré pour demander des éclaircissements à un professeur.",
+    "defaults": {
+      "recipientType": "Professor",
+      "channel": "email",
+      "tone": "polite",
+      "askType": "direction",
+      "timeboxMin": 5
+    }
+  },
+  {
+    "id": "ta-slack-direct-fr",
+    "recipientType": "TA",
+    "channel": "slack",
+    "tone": "direct",
+    "lang": "fr",
+    "label": "Slack à l'assistant (direct)",
+    "description": "Un message Slack bref et direct à un assistant.",
+    "defaults": {
+      "recipientType": "TA",
+      "channel": "slack",
+      "tone": "direct",
+      "askType": "answer",
+      "timeboxMin": 2
+    }
+  },
+  {
+    "id": "teammate-slack-warm-fr",
+    "recipientType": "Teammate",
+    "channel": "slack",
+    "tone": "warm",
+    "lang": "fr",
+    "label": "Slack à un coéquipier (amical)",
+    "description": "Un message amical pour demander de l'aide à un coéquipier.",
+    "defaults": {
+      "recipientType": "Teammate",
+      "channel": "slack",
+      "tone": "warm",
+      "askType": "review",
+      "timeboxMin": 10
+    }
+  },
+  {
+    "id": "mentor-email-polite-fr",
+    "recipientType": "Mentor",
+    "channel": "email",
+    "tone": "polite",
+    "lang": "fr",
+    "label": "Courriel au mentor (poli)",
+    "description": "Un courriel poli pour demander conseil à un mentor.",
+    "defaults": {
+      "recipientType": "Mentor",
+      "channel": "email",
+      "tone": "polite",
+      "askType": "recommend",
+      "timeboxMin": 10
+    }
+  },
+  {
+    "id": "professor-confirm-email",
+    "recipientType": "Professor",
+    "channel": "email",
+    "tone": "polite",
+    "lang": "en",
+    "label": "Confirm Understanding (Email)",
+    "description": "An email to confirm your understanding of an assignment or concept.",
+    "defaults": {
+      "recipientType": "Professor",
+      "channel": "email",
+      "tone": "polite",
+      "askType": "confirm",
+      "timeboxMin": 5
+    }
+  },
+  {
+    "id": "teammate-issue-direct",
+    "recipientType": "Teammate",
+    "channel": "issue",
+    "tone": "direct",
+    "lang": "en",
+    "label": "Code Review Request (Issue)",
+    "description": "A direct request for code review on a pull request or issue.",
+    "defaults": {
+      "recipientType": "Teammate",
+      "channel": "issue",
+      "tone": "direct",
+      "askType": "review",
+      "timeboxMin": 15
+    }
+  },
+  {
+    "id": "support-slack-urgent",
+    "recipientType": "Support",
+    "channel": "slack",
+    "tone": "urgent",
+    "lang": "en",
+    "label": "Urgent Slack to Support",
+    "description": "An urgent Slack message to a support channel or IT help desk.",
+    "defaults": {
+      "recipientType": "Support",
+      "channel": "slack",
+      "tone": "urgent",
+      "askType": "answer",
+      "timeboxMin": 2
+    }
   }
 ]

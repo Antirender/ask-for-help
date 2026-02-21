@@ -45,7 +45,7 @@ export default function History() {
   return (
     <div className="container page-enter">
       <h1 style={{ fontSize: 'var(--fs-xl)', fontWeight: 700, marginBottom: 'var(--sp-2)' }}>
-        📋 Evidence History
+        Evidence History
       </h1>
       <p className="text-muted text-sm mb-6">
         All your generated asks, stored locally on this device only.

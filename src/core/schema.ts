@@ -2,7 +2,7 @@
    schema.ts — Data types for Ask-for-Help
    ============================================================ */
 
-export type Lang = 'en' | 'zh' | 'mix';
+export type Lang = 'en' | 'zh' | 'fr' | 'mix';
 
 export type RecipientType =
   | 'Professor'

@@ -1,0 +1,110 @@
+{
+  "salutations": {
+    "polite": [
+      "Bonjour Professeur,",
+      "Cher/Chère Professeur(e),",
+      "Bonjour, j'espère que vous allez bien."
+    ],
+    "direct": [
+      "Bonjour,",
+      "Bonjour Professeur,"
+    ],
+    "warm": [
+      "Bonjour ! J'espère que votre journée se passe bien.",
+      "Salut ! J'espère que tout va bien."
+    ],
+    "urgent": [
+      "Bonjour, je vous écris de manière urgente.",
+      "Bonjour, j'ai besoin d'aide le plus vite possible."
+    ]
+  },
+  "closings": {
+    "polite": [
+      "Merci beaucoup pour votre temps.",
+      "Je vous remercie d'avance pour votre aide.",
+      "Cordialement,"
+    ],
+    "direct": [
+      "Merci.",
+      "Bien cordialement,"
+    ],
+    "warm": [
+      "Merci beaucoup ! J'apprécie vraiment votre aide.",
+      "Merci d'avance, bonne continuation !"
+    ],
+    "urgent": [
+      "J'attends votre réponse avec impatience. Merci.",
+      "Merci de votre attention urgente."
+    ]
+  },
+  "goal_starters": [
+    "J'essaie de comprendre…",
+    "Je travaille sur…",
+    "Mon objectif est de…",
+    "J'aimerais pouvoir…",
+    "J'ai besoin de finaliser…"
+  ],
+  "context_phrases": [
+    "C'est pour le cours de…",
+    "Cela fait partie du projet de…",
+    "Je travaille dessus depuis…",
+    "La date limite est…",
+    "Le professeur a mentionné que…"
+  ],
+  "ask_phrases": {
+    "answer": [
+      "Pourriez-vous m'expliquer…",
+      "Savez-vous pourquoi…",
+      "Pourriez-vous préciser…"
+    ],
+    "direction": [
+      "Pourriez-vous m'orienter dans la bonne direction ?",
+      "Quel serait un bon point de départ ?",
+      "Avez-vous des recommandations pour aborder cela ?"
+    ],
+    "review": [
+      "Pourriez-vous jeter un coup d'œil à…",
+      "J'apprécierais vos commentaires sur…",
+      "Serait-il possible de revoir mon approche ?"
+    ],
+    "confirm": [
+      "Suis-je sur la bonne voie ?",
+      "Pourriez-vous confirmer que mon approche est correcte ?",
+      "Est-ce que j'ai bien compris ?"
+    ],
+    "recommend": [
+      "Avez-vous des suggestions ?",
+      "Que recommanderiez-vous ?",
+      "Quelle serait la meilleure approche selon vous ?"
+    ]
+  },
+  "timebox_phrases": [
+    "Cela ne devrait prendre que X minutes.",
+    "Une réponse rapide suffirait.",
+    "Si vous avez un moment,…",
+    "Quand vous aurez le temps,…"
+  ],
+  "exit_options": [
+    "Si vous n'êtes pas la bonne personne à contacter, pourriez-vous me rediriger ?",
+    "Si le moment n'est pas idéal, faites-le moi savoir.",
+    "N'hésitez pas à me répondre quand cela vous convient."
+  ],
+  "subject_lines": {
+    "polite": [
+      "Question concernant [sujet] — cours [nom du cours]",
+      "Demande de clarification — [sujet]"
+    ],
+    "direct": [
+      "[Cours] — Question sur [sujet]",
+      "Aide nécessaire : [sujet]"
+    ],
+    "warm": [
+      "Un petit coup de main ? — [sujet]",
+      "J'aurais besoin de vos lumières sur [sujet]"
+    ],
+    "urgent": [
+      "URGENT : Question sur [sujet] — date limite [date]",
+      "Aide urgente nécessaire — [sujet]"
+    ]
+  }
+}

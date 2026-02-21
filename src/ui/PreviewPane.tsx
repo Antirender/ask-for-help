@@ -4,6 +4,7 @@
 
 import { useState } from 'react';
 import type { GeneratedOutput } from '../core/schema';
+import { IconCopy, IconDownload, IconCheck } from './Icons';
 
 interface Props {
   output: GeneratedOutput;
@@ -72,11 +73,11 @@ export default function PreviewPane({ output, lang }: Props) {
           ))}
         </div>
         <div className="flex gap-2">
-          <button className="btn btn-outline btn-sm" onClick={copy}>
-            {copied ? '✓ Copied!' : '📋 Copy'}
+          <button className="btn btn-outline btn-sm" onClick={copy} style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+            {copied ? <>{IconCheck({ size: 14 })} Copied!</> : <>{IconCopy({ size: 14 })} Copy</>}
           </button>
-          <button className="btn btn-ghost btn-sm" onClick={download}>
-            💾 .txt
+          <button className="btn btn-ghost btn-sm" onClick={download} style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+            {IconDownload({ size: 14 })} .txt
           </button>
         </div>
       </div>

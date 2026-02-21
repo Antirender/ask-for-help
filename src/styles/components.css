@@ -317,3 +317,108 @@ select {
   from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+
+/* ============================================================
+   Responsive breakpoints
+   ============================================================ */
+
+/* Tablet and below (< 768px) */
+@media (max-width: 767px) {
+  .container {
+    padding: 0 var(--sp-3);
+  }
+
+  /* Stack wizard stepper */
+  .wizard-stepper {
+    gap: var(--sp-1) !important;
+    font-size: var(--fs-xs) !important;
+  }
+
+  /* Collapse feature grids to single column on narrow */
+  .feature-grid,
+  .steps-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Template grid single column */
+  .template-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* History entry header stacks */
+  .history-entry-header {
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+  }
+
+  /* Score ring smaller */
+  .score-ring {
+    width: 48px;
+    height: 48px;
+    font-size: var(--fs-md);
+  }
+
+  /* Preview body shorter */
+  .preview-body {
+    max-height: 260px;
+  }
+
+  /* Accessibility row wrap */
+  .a11y-row {
+    flex-wrap: wrap;
+  }
+}
+
+/* Phone (< 480px) */
+@media (max-width: 479px) {
+  .container {
+    padding: 0 var(--sp-2);
+  }
+
+  /* Chips become full-width if many */
+  .chip {
+    font-size: var(--fs-xs);
+    padding: var(--sp-1) var(--sp-3);
+    min-height: 32px;
+  }
+
+  /* Buttons slightly smaller */
+  .btn {
+    padding: var(--sp-2) var(--sp-4);
+    font-size: var(--fs-xs);
+  }
+
+  /* Cards reduced padding */
+  .card {
+    padding: var(--sp-3);
+  }
+
+  /* Review actions stack */
+  .review-layout .flex.gap-3.justify-center {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  /* Filter row in history */
+  .history-table .flex.gap-3 {
+    flex-direction: column;
+  }
+  .history-table .flex.gap-3 .input-field {
+    width: 100% !important;
+  }
+}
+
+/* Wide desktop (> 1200px) */
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1080px;
+  }
+  .review-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--sp-4);
+  }
+  .review-layout > .flex.gap-3.justify-center {
+    grid-column: 1 / -1;
+  }
+}

@@ -2,12 +2,20 @@
    Home.tsx — Landing page: what this tool does, quick start, privacy
    ============================================================ */
 
+import {
+  IconMessageSquare, IconEdit, IconLibrary, IconLightbulb,
+  IconBarChart, IconCopy, IconShield, IconGlobe,
+  IconAccessibility, IconDownload, IconZap
+} from '../ui/Icons';
+
 export default function Home() {
   return (
     <div className="container container-narrow page-enter">
       {/* Hero */}
       <section style={{ textAlign: 'center', padding: 'var(--sp-10) 0 var(--sp-6)' }}>
-        <div style={{ fontSize: '3.5rem', marginBottom: 'var(--sp-4)' }}>💬</div>
+        <div style={{ marginBottom: 'var(--sp-4)', display: 'flex', justifyContent: 'center' }}>
+          {IconMessageSquare({ size: 48, className: 'hero-icon' })}
+        </div>
         <h1 style={{ fontSize: 'var(--fs-2xl)', fontWeight: 700, lineHeight: 'var(--lh-tight)', marginBottom: 'var(--sp-3)' }}>
           Ask for help
         </h1>
@@ -16,11 +24,11 @@ export default function Home() {
           No login. No server. Everything stays on your device.
         </p>
         <div className="flex justify-center gap-3 mt-6">
-          <a href="#/build" className="btn btn-primary" style={{ textDecoration: 'none' }}>
-            ✏️ Start building
+          <a href="#/build" className="btn btn-primary" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+            {IconEdit({ size: 16 })} Start building
           </a>
-          <a href="#/library" className="btn btn-outline" style={{ textDecoration: 'none' }}>
-            📚 Browse templates
+          <a href="#/library" className="btn btn-outline" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+            {IconLibrary({ size: 16 })} Browse templates
           </a>
         </div>
       </section>
@@ -31,9 +39,9 @@ export default function Home() {
           How it works
         </h2>
         <div className="steps-grid">
-          <StepCard number={1} icon="📝" title="Fill in the wizard" desc="Answer a few simple questions — who, what, why, where you're stuck. Skip anything you're unsure about." />
-          <StepCard number={2} icon="🤖" title="Get smart suggestions" desc="Our built-in heuristics + Markov engine scores your request and suggests improvements — no AI API needed." />
-          <StepCard number={3} icon="📋" title="Copy & send" desc="Get your request in 3 formats (ultra-short, short, standard), tailored for Slack, email, or forums. One click to copy." />
+          <StepCard number={1} icon={IconEdit({ size: 28 })} title="Fill in the wizard" desc="Answer a few simple questions — who, what, why, where you're stuck. Skip anything you're unsure about." />
+          <StepCard number={2} icon={IconLightbulb({ size: 28 })} title="Get smart suggestions" desc="Our built-in heuristics + Markov engine scores your request and suggests improvements — no AI API needed." />
+          <StepCard number={3} icon={IconCopy({ size: 28 })} title="Copy & send" desc="Get your request in 3 formats (ultra-short, short, standard), tailored for Slack, email, or forums. One click to copy." />
         </div>
       </section>
 
@@ -43,19 +51,19 @@ export default function Home() {
           Features
         </h2>
         <div className="feature-grid">
-          <FeatureCard icon="🔒" title="100% Private" desc="No login, no server, no tracking. All data stays in your browser." />
-          <FeatureCard icon="🌐" title="EN / 中文" desc="Full bilingual support — English, Chinese, or mixed mode." />
-          <FeatureCard icon="📊" title="Explainable Score" desc="5-dimension quality score with actionable tips to improve your ask." />
-          <FeatureCard icon="♿" title="Accessible" desc="Keyboard navigation, focus rings, high contrast, reduced motion support." />
-          <FeatureCard icon="📥" title="Evidence Export" desc="Save history locally. Export as JSON or CSV for assignment evidence." />
-          <FeatureCard icon="⚡" title="Works Offline" desc="After first load, the entire app works without internet." />
+          <FeatureCard icon={IconShield({ size: 24 })} title="100% Private" desc="No login, no server, no tracking. All data stays in your browser." />
+          <FeatureCard icon={IconGlobe({ size: 24 })} title="EN / 中文 / FR" desc="Full multilingual support — English, Chinese, French, or mixed mode." />
+          <FeatureCard icon={IconBarChart({ size: 24 })} title="Explainable Score" desc="5-dimension quality score with actionable tips to improve your ask." />
+          <FeatureCard icon={IconAccessibility({ size: 24 })} title="Accessible" desc="Keyboard navigation, focus rings, high contrast, reduced motion support." />
+          <FeatureCard icon={IconDownload({ size: 24 })} title="Evidence Export" desc="Save history locally. Export as JSON or CSV for assignment evidence." />
+          <FeatureCard icon={IconZap({ size: 24 })} title="Works Offline" desc="After first load, the entire app works without internet." />
         </div>
       </section>
 
       {/* Privacy banner */}
       <section className="card mt-6" style={{ textAlign: 'center', padding: 'var(--sp-6)' }}>
-        <h3 style={{ fontSize: 'var(--fs-md)', fontWeight: 600, marginBottom: 'var(--sp-2)' }}>
-          🔒 Privacy Promise
+        <h3 style={{ fontSize: 'var(--fs-md)', fontWeight: 600, marginBottom: 'var(--sp-2)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+          {IconShield({ size: 18 })} Privacy Promise
         </h3>
         <p className="text-muted text-sm prose" style={{ margin: '0 auto' }}>
           Ask for help has <strong>no login, no server storage, no analytics, and no tracking</strong>.
@@ -65,6 +73,7 @@ export default function Home() {
       </section>
 
       <style>{`
+        .hero-icon { color: var(--accent); }
         .steps-grid {
           display: grid;
           grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -96,26 +105,26 @@ export default function Home() {
           padding: var(--sp-5);
         }
         .feature-icon {
-          font-size: 1.8rem;
           margin-bottom: var(--sp-2);
+          color: var(--accent);
         }
       `}</style>
     </div>
   );
 }
 
-function StepCard({ number, icon, title, desc }: { number: number; icon: string; title: string; desc: string }) {
+function StepCard({ number, icon, title, desc }: { number: number; icon: React.ReactNode; title: string; desc: string }) {
   return (
     <div className="card step-card">
       <div className="step-num">{number}</div>
-      <div style={{ fontSize: '2rem', marginBottom: 'var(--sp-2)' }}>{icon}</div>
+      <div style={{ marginBottom: 'var(--sp-2)', display: 'flex', justifyContent: 'center', color: 'var(--accent)' }}>{icon}</div>
       <h3 style={{ fontSize: 'var(--fs-base)', fontWeight: 600, marginBottom: 'var(--sp-1)' }}>{title}</h3>
       <p className="text-sm text-muted">{desc}</p>
     </div>
   );
 }
 
-function FeatureCard({ icon, title, desc }: { icon: string; title: string; desc: string }) {
+function FeatureCard({ icon, title, desc }: { icon: React.ReactNode; title: string; desc: string }) {
   return (
     <div className="card feature-card">
       <div className="feature-icon">{icon}</div>
